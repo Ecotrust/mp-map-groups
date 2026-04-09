@@ -1,42 +1,15 @@
-"""
-Experimental URL patterns module.
-SRH Jan-2015
+"""URL configuration for the mapgroups app."""
+from django.urls import path, re_path
 
-For 3rd party modules, I'd like the including project to be able to specify a
-namespace for URL names. At the same time, in the module, I'd like to be able
-to reverse URLs in views, tests, and models without knowledge of what namespace
-the project is using.
-
-The app_name and namespaces are defined external to the module, which seems to
-be a design flaw (or maybe I'm interpreting what the design is supposed to do
-incorrectly).
-
-The best solution seems to be to provide a 'urls()' function which is called
-to get the module's URLs. It sets the app_name to a known value (for use
-internally by the module), and namespace to the value provided by the project,
-for use in the project's code. (I think app_name should be the name of the
-module providing the URLs, but that is not easy to auto-discover, especially if
-the URLs are generated).
-
-Short version:
-Usage:
-
-    import map_groups.urls
-    urls(r'^mount_point/', include(map_groups.urls.urls('Project Name Space'))
-"""
-
-try:
-    from django.urls import re_path, include
-except (ModuleNotFoundError, ImportError):
-    from django.conf.urls import url as re_path, include
-from mapgroups import rpc
-from mapgroups.views import MapGroupDetailView, \
-    MapGroupCreate, MapGroupListView, JoinMapGroupActionView, \
-    RequestJoinMapGroupActionView, MapGroupEditView, MapGroupPreferencesView, \
-    LeaveMapGroupActionView, DeleteMapGroupActionView, \
-    RemoveMapGroupImageActionView, ApproveMapGroupActionView, \
-    DenyMapGroupActionView, PromoteMapGroupMemberActionView, \
-    RemoveMapGroupMemberActionView, DemoteMapGroupMemberActionView
+from mapgroups.views import (
+    MapGroupDetailView, MapGroupCreate, MapGroupListView,
+    JoinMapGroupActionView, RequestJoinMapGroupActionView,
+    MapGroupEditView, MapGroupPreferencesView, LeaveMapGroupActionView,
+    DeleteMapGroupActionView, RemoveMapGroupImageActionView,
+    ApproveMapGroupActionView, DenyMapGroupActionView,
+    PromoteMapGroupMemberActionView, RemoveMapGroupMemberActionView,
+    DemoteMapGroupMemberActionView,
+)
 
 app_name = 'mapgroups'
 
