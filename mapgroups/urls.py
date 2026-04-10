@@ -1,6 +1,5 @@
 """URL configuration for the mapgroups app."""
 from django.urls import path, re_path
-
 from mapgroups.views import (
     MapGroupDetailView, MapGroupCreate, MapGroupListView,
     JoinMapGroupActionView, RequestJoinMapGroupActionView,
@@ -57,3 +56,12 @@ def urls(namespace='mapgroups'):
     internally, they are referred to as app_name:urlname.
     """
     return (urlpatterns, 'mapgroups', namespace)
+
+
+# DRF API patterns — mounted at /api/ by the project urls.py
+from mapgroups.api import SharingGroupListView, MapGroupUpdateView  # noqa: E402
+
+api_urlpatterns = [
+    re_path(r'^sharing-groups/$', SharingGroupListView.as_view()),
+    re_path(r'^map-groups/(?P<pk>\d+)/$', MapGroupUpdateView.as_view()),
+]

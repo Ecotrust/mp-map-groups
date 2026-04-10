@@ -1,1 +1,1 @@
-rpc4django
+# rpc4django removed — replaced by djangorestframework API views
