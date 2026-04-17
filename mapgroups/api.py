@@ -44,7 +44,8 @@ class SharingGroupListView(APIView):
                 'is_mapgroup': True,
             })
 
-        for public_group in Group.objects.filter(name__in=settings.SHARING_TO_PUBLIC_GROUPS):
+        sharing_to_public_groups = getattr(settings, 'SHARING_TO_PUBLIC_GROUPS', [])
+        for public_group in Group.objects.filter(name__in=sharing_to_public_groups):
             data.append({
                 'group_name': public_group.name,
                 'group_slug': public_group.name,
