@@ -9,6 +9,7 @@ from typing import Any
 
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -16,7 +17,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from mapgroups.models import MapGroup
+from mapgroups.models import MapGroup, MapGroupMember
 
 
 class SharingGroupListView(APIView):
@@ -31,7 +32,16 @@ class SharingGroupListView(APIView):
     def get(self, request: Request) -> Response:
         data: list[dict[str, Any]] = []
 
-        for membership in request.user.mapgroupmember_set.all():
+        memberships = request.user.mapgroupmember_set.select_related(
+            'map_group__permission_group'
+        ).prefetch_related(
+            Prefetch(
+                'map_group__mapgroupmember_set',
+                queryset=MapGroupMember.objects.select_related('user'),
+            )
+        )
+
+        for membership in memberships:
             group = membership.map_group
             members = sorted(
                 member.user_name_for_group()
